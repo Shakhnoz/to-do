@@ -1,89 +1,67 @@
 
-Vue.component('to-do', {
+
+Vue.component('to-do-list', {
     
     
     template: `
-        
-    <div>
+    
+      <div>
+        <p> 
+            <input class="form-control col-4 border border-danger" v-model="newToDO" @keyup.enter="addToDo" placeholder="Today I'm gonna do...">
+        </p>  
         <ul class="list-group">
-            <li class="list-group-item" v-for="todo in todos" :key="todo.todoId" :class="{'line-through': todo.completed}">
+            <li class="list-group-item col-4" v-for="(todo, index) in todos" :key="todo.Id" :class="{'line-through': todo.completed}">
                 <input type="checkbox" id="checkbox" v-model="todo.completed">
-                {{ todo.todoTitle }}
+                {{ todo.Title }}
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-success">Edit</button>
+                    <button type="button" class="btn btn-danger" @click="removeToDo(index)">Delete</button>
+                </div>
             </li>
-        </ul>
-
-        
-    </div>
-        
+        </ul> 
+      </div>  
+    
     `,
 
     data(){
         return{
-            selectedTodo: 0,
+            todoId: 4,
+            newToDO: '',
+            itemCompleted: false,
             todos:[
                 {
-                    todoId: 1,
-                    todoTitle: "Make notes",
+                    Id: 1,
+                    Title: "Make notes",
                     completed : false
                 },
                 {
-                    toDoId: 2,
-                    todoTitle: "Meal prep",
+                    Id: 2,
+                    Title: "Meal prep",
                     completed : false
                 },{
-                    toDoId: 3,
-                    todoTitle: "Pack the books",
+                    Id: 3,
+                    Title: "Pack the books",
                     completed : false
                 },
         ],
+        }
+    },
+    methods: {
+        addToDo(){           
+
+            this.todos.push(
+                {
+                    Id: this.todoId,
+                    Title: this.newToDO,
+                    completed: false
+                })
+
+                this.newToDO = ''
+                this.todoId++
             
-        }
-    },
-
-    methods: {
-        addToDoItem(toDoItem){
-            this.todos.push(toDoItem)
-        }
-    }
-
-
-})
-
-
-Vue.component('to-do-form', {
-    
-    
-    template: `
-    <form @submit.prevent="onSubmit">
-      
-        <p>
-            <label for="title">Title:</label>
-            <input v-model="newToDO">
-        </p>        
-        <p>
-            <input type="submit" value="Submit">  
-        </p>    
-  
-    </form>
-    `,
-
-    data(){
-        return{
-            itemId: 5,
-            newToDO: null,
-            itemCompleted: false
-        }
-    },
-    methods: {
-        onSubmit(){
-            let toDoItem = {
-                itemId: 5,
-                itemTitle: this.itemTitle,
-                itemCompleted: false               
-            }
-            this.$emit('toDoItemSubmitted', toDoItem)
-            this.itemTitle = null,
-            this.itemCompleted= false 
+        },
+        removeToDo(index){
+            this.todos.splice(index, 1)
         }
     }
 })

@@ -6,7 +6,7 @@ Vue.component('to-do', {
         
     <div>
         <ul class="list-group">
-            <li class="list-group-item" v-for="todo in todos" :key="todo.todoId" :class="{'line-through': todo.completed}" @mouseover:>
+            <li class="list-group-item" v-for="todo in todos" :key="todo.todoId" :class="{'line-through': todo.completed}">
                 <input type="checkbox" id="checkbox" v-model="todo.completed">
                 {{ todo.todoTitle }}
             </li>
@@ -38,40 +38,54 @@ Vue.component('to-do', {
         ],
             
         }
+    },
+
+    methods: {
+        addToDoItem(toDoItem){
+            this.todos.push(toDoItem)
+        }
     }
 
 
 })
 
 
-Vue.component('ToDoForm', {
+Vue.component('to-do-form', {
+    
+    
     template: `
-    <form class="review-form" @submit.prevent="onSubmit">
+    <form @submit.prevent="onSubmit">
       
         <p>
             <label for="title">Title:</label>
-            <input id="title" v-model="title">
-        </p>
-        
-        
-        
-        <p>
-            <label for="rating">Rating:</label>
-            <select id="rating" v-model.number="rating">
-                <option>5</option>
-                <option>4</option>
-                <option>3</option>
-                <option>2</option>
-                <option>1</option>
-            </select>
-        </p>
-            
+            <input v-model="newToDO">
+        </p>        
         <p>
             <input type="submit" value="Submit">  
         </p>    
   
     </form>
     `,
+
+    data(){
+        return{
+            itemId: 5,
+            newToDO: null,
+            itemCompleted: false
+        }
+    },
+    methods: {
+        onSubmit(){
+            let toDoItem = {
+                itemId: 5,
+                itemTitle: this.itemTitle,
+                itemCompleted: false               
+            }
+            this.$emit('toDoItemSubmitted', toDoItem)
+            this.itemTitle = null,
+            this.itemCompleted= false 
+        }
+    }
 })
 
 var app = new Vue({
